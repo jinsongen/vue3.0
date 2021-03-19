@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<title>
+			<%= htmlWebpackPlugin.options.title %>
+		</title>
+	</head>
+	<body>
+		<noscript>
+			<strong>We're sorry but
+				<%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to
+				continue.</strong>
+		</noscript>
+		<div id="app"></div>
+		<div id="content" style="height:150px;line-height:150px;text-align:center; color: #fff;background-color:#ccc;font-size:80px;"></div>
+		<!-- built files will be auto injected -->
+	</body>
+	<script>
+		let num = 1;
+		let content = document.getElementById('content');
+		function debounce(func, wait, immediate) {
+			let timer;
+			return function() {
+				let context = this,
+					args = arguments;
+				if (timer) clearTimeout(timer);
+				if (immediate) {
+					let callNow = !timer;
+					timer = setTimeout(() => {
+						timer = null;
+					}, wait);
+					if (callNow) func.apply(context, args);
+				} else {
+					timer = setTimeout(() => {
+						console.log(123)
+						func.apply(context, args)
+					}, wait)
+				}
+			}
+		}
+
+		function count() {
+			content.innerHTML = num++;
+		};
+		function throttle(func, wait, type) {
+		  if (type === 1) {
+		    var previous = 0;
+		  } else if (type === 2) {
+		    var timeout;
+		  }
+		  return function() {
+		    let context = this;
+		    let args = arguments;
+		    if (type === 1) {
+		        let now = Date.now();
+		        if (now - previous > wait) {
+		          func.apply(context, args);
+		          previous = now;
+		        }
+		    } else if (type === 2) {
+		      if (!timeout) {
+		        timeout = setTimeout(() => {
+		          timeout = null;
+		          func.apply(context, args)
+		        }, wait)
+		      }
+		    }
+		  }
+		}
+		content.onmousemove = throttle(count, 1000, 1);
+	</script>
+</html>
